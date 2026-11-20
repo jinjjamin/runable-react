@@ -603,6 +603,7 @@ const { state, platform, setState } = usePageState<LoginState>({
 | 2026-11-17 | 레이스 탭 활성 아이콘은 비활성 아이콘 색만 Primary-500으로 바꿔 사용 (`iconTabRaceOn.svg`) | 시안에 레이스 활성 상태가 없음(RA1도 홈 활성으로 그려짐). 다른 탭도 활성·비활성이 색만 달라 같은 규칙 적용 (사용자 결정) |
 | 2026-11-17 | SNS 아이콘은 PNG(88×88, 2배) 사용 | Figma 원본 로고가 비트맵이라 SVG로 받으면 파일당 150KB 이상 |
 | 2026-11-16 | CSS Modules·상태 관리 라이브러리 미사용, Swiper 사용 | `AGENTS.md` 정책 |
+| 2026-11-20 | GitHub Pages 배포 (https://jinjjamin.github.io/runable-react/): `vite.config.ts` base는 빌드·미리보기만 `/runable-react/`(개발 서버 `/`), 라우터 `basename`과 IA 링크에 `import.meta.env.BASE_URL` 사용, 직접 주소 진입용 `404.html`(index.html 복사), `.github/workflows/deploy.yml`로 main push 시 자동 배포 | 사용자 요청. 저장소 Settings → Pages → Source를 GitHub Actions로 설정해야 함 |
 | 2026-11-20 | 컴포넌트·페이지 폴더 평탄화: `components/pub/<묶음>/X/X.tsx` → `components/pub/<묶음>/X.tsx`, `pages/pub/<메뉴>/X/X.tsx` → `pages/pub/X.tsx` (메뉴 그룹 폴더도 없앰). AGENTS.md 4장·5.1 갱신 | 사용자 요청 |
 | 2026-11-20 | 상단 바 컴포넌트 이름을 `TopBar`에서 `Header`로 변경 (`layout/Header/Header.tsx`). CSS 클래스명 `topBar*`와 Guide 앵커 `#topBar`는 그대로 둠 | 사용자 요청. 클래스명은 기존 이름 유지 규칙(AGENTS.md 5.3), 앵커 id를 header로 바꾸면 화면의 `#header` 요소와 겹침 |
 | 2026-11-17 | 레이스 목록(RA1): 대회 상태 깃발은 RA1 Card Module 케이스 기준(upcoming 진행예정, open 접수중, closed 신청마감, finished 마감 + 이미지 60% 어둡게). 시안에 없는 ongoing은 진행예정 모양에 "진행중". 신청 가능 건수는 시안 예시(3건) 목업. 홈 01최소의 마감 대회도 finished로 통일(카드 모듈 기준 줄 그은 시계) | 시안 설명 1~4와 카드 모듈 케이스 |

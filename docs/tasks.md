@@ -144,6 +144,7 @@
 | 2026-11-20 | 상단 바 이름 변경 | `TopBar` → `Header` (`components/pub/layout/Header/Header.tsx`, Props `HeaderProps`). 사용처 Home·RaceList·Signup·PasswordFind·Guide import·JSX 교체, Layout·TermsForm·common.css 주석 갱신, Guide 메뉴·제목·경로 Header로. CSS 클래스명(`topBar*`)과 Guide 앵커 `#topBar`는 유지. design.md 갱신 |
 | 2026-11-20 | 폴더 평탄화 | 컴포넌트 17개 `components/pub/<묶음>/X/X.tsx` → `<묶음>/X.tsx`, 페이지 9개 `pages/pub/(<메뉴>/)X/X.tsx` → `pages/pub/X.tsx`, 빈 폴더 삭제, 모든 상대 import 경로 재계산. Guide 파일 경로 표시, AGENTS.md(4장 구조·5.1 규칙·IA/Guide 경로), design.md(폴더 구조·설계 원칙·컴포넌트 위치) 갱신. 확인: tsc·빌드·린트 통과, 화면 확인 |
 | 2026-11-20 | 접근성 점검 | 화면 10개·상태 16가지 자동 점검: img alt 누락 0, 이름 없는 버튼·링크 0(아이콘 버튼 aria-label 확인), tabindex>0 없음, 중복 id 없음, 화면마다 h1 1개, lang=ko. 키보드 Tab 이동 시 모든 버튼·링크 :focus-visible 파란 테두리 2px, 입력창은 상자 테두리로 표시 확인. Guide의 TermsForm 예제 Header 제거(#header id 중복 해결). 확인: tsc·빌드·린트·CSS 범위 통과 |
+| 2026-11-20 | GitHub Pages 배포 설정 | `vite.config.ts` base(빌드·미리보기 `/runable-react/`), `App.tsx` BrowserRouter basename, `iaData.ts` 링크 앞에 배포 주소, `.github/workflows/deploy.yml`(npm ci → build → 404.html 복사 → Pages 배포), `.claude/launch.json`에 preview 설정. 확인: 빌드·린트 통과, 미리보기(4173/runable-react/)에서 IA 57행·링크 `/runable-react/...`, 홈 이미지 17개 정상, 하단 탭·프로필 링크 `/runable-react/...`, 개발 서버(5173 /)도 정상 |
 
 ## 나중에 할 것 (Backlog)
 

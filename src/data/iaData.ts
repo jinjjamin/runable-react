@@ -43,11 +43,14 @@ interface RowOption {
 // depths: 메뉴 깊이별 이름 (상위 메뉴와 같은 행이 아니면 빈 문자열)
 // fileName: 실제 React Router 경로 (IA에서 새 창 열기·미리보기 링크로 사용)
 // task 기본값은 '0'(Undone). 검증된 페이지만 '1'(Done)로 바꿉니다.
+// 배포 주소 앞부분(GitHub Pages /runable-react, 개발 서버는 빈 값)을 붙여 IA 새 창·미리보기 링크가 실제 주소로 열리게 합니다.
+const SITE_BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const createRow = (depths: string[], fileName: string, option: RowOption = {}): Cell[] => {
     const { date = '', people = '', memo = '', task = '0' } = option;
     return [
         ...Array.from({ length: DEPTH_COUNT }, (_, index) => ({ className: 'menuDepth', text: depths[index] ?? '' })),
-        { className: 'fileName', text: fileName },
+        { className: 'fileName', text: `${SITE_BASE}${fileName}` },
         { className: 'date', text: date },
         { className: 'people', text: people },
         { className: 'issueMemo', text: memo },

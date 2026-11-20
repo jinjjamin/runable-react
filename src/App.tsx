@@ -66,9 +66,12 @@ const PAGE_ROUTES: PageRoute[] = [
     { path: ROUTES.error, element: null } // CO2.5
 ];
 
+// GitHub Pages(/runable-react/)에서도 같은 경로로 동작하도록 빌드 base를 라우터 basename으로 사용
+const ROUTER_BASENAME = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const App = () => {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename={ROUTER_BASENAME}>
             <Routes>
                 <Route path={ROUTES.ia} element={<Ia />} />
                 <Route path={ROUTES.guide} element={<Guide />} />
