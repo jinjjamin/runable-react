@@ -1,0 +1,137 @@
+/* 08. IA 관리 화면 (/ia) --------------------------------------------------- */
+/* AGENTS.md 6.3: 원본 Ia.tsx <style>의 규칙을 값 변경 없이 #iaWrap 범위로 옮겼습니다.
+   - body 규칙 → #iaWrap, html input[...] → input[...]
+   - normalize의 body{margin:0}, html{...}, 빈 규칙(q{}, h1 em::before{})은 제외
+   - @keyframes bgChange는 범위 지정이 불가하여 그대로 둡니다. */
+
+/* 08-1. 일반 페이지 스타일과 분리: IA는 원본처럼 브라우저 기본값 기준으로 표시 */
+#iaWrap,
+#iaWrap *,
+#iaWrap *::before,
+#iaWrap *::after {
+    box-sizing: content-box;
+}
+
+#iaWrap ul {
+    padding-left: 40px;
+    list-style: disc;
+}
+
+/* 08-2. 원본 Ia.tsx 인라인 스타일(h3 style={{marginTop: 50, marginBottom: 10}})을 옮긴 규칙 */
+#iaWrap h3.menuTitle {
+    margin-top: 50px;
+    margin-bottom: 10px;
+}
+
+/* 08-3. 원본 Ia.tsx <style> (범위 지정본) */
+#iaWrap article, #iaWrap aside, #iaWrap details, #iaWrap figcaption, #iaWrap figure, #iaWrap footer, #iaWrap header, #iaWrap hgroup, #iaWrap main, #iaWrap nav, #iaWrap section, #iaWrap summary {display: block}
+#iaWrap audio, #iaWrap canvas, #iaWrap video {display: inline-block}
+#iaWrap audio:not([controls]) {display: none;height: 0;}
+#iaWrap [hidden], #iaWrap template {display: none}
+#iaWrap a {background: transparent;text-decoration: none;}
+#iaWrap a:focus {outline: thin dotted}
+#iaWrap a:active, #iaWrap a:hover {outline: 0}
+#iaWrap h1 {font-size: 2em;margin: 0.67em 0;}
+#iaWrap abbr[title] {border-bottom: 1px dotted}
+#iaWrap b, #iaWrap strong {font-weight: bold}
+#iaWrap dfn {font-style: italic}
+#iaWrap hr {-moz-box-sizing: content-box;box-sizing: content-box;height: 0;}
+#iaWrap mark {background: #ff0;color: #000;}
+#iaWrap code, #iaWrap kbd, #iaWrap pre, #iaWrap samp {font-family: monospace, serif;font-size: 1em;}
+#iaWrap pre {white-space: pre-wrap}
+#iaWrap small {font-size: 80%}
+#iaWrap sub, #iaWrap sup {font-size: 75%;line-height: 0;position: relative;vertical-align: baseline;}
+#iaWrap sup {top: -0.5em}
+#iaWrap sub {bottom: -0.25em}
+#iaWrap img {border: 0}
+#iaWrap svg:not(:root) {overflow: hidden}
+#iaWrap figure {margin: 0}
+#iaWrap fieldset {border: 1px solid #c0c0c0;margin: 0 2px;padding: 0.35em 0.625em 0.75em;}
+#iaWrap legend {border: 0;padding: 0;}
+#iaWrap button, #iaWrap input, #iaWrap select, #iaWrap textarea {font-family: inherit;font-size: 100%;margin: 0;}
+#iaWrap button, #iaWrap input {line-height: normal}
+#iaWrap button, #iaWrap select {text-transform: none}
+#iaWrap button, #iaWrap input[type="button"], #iaWrap input[type="reset"], #iaWrap input[type="submit"] {-webkit-appearance: button;cursor: pointer;}
+#iaWrap button[disabled], #iaWrap input[disabled] {cursor: default}
+#iaWrap input[type="checkbox"], #iaWrap input[type="radio"] {box-sizing: border-box;padding: 0;}
+#iaWrap input[type="search"] {-webkit-appearance: textfield;-moz-box-sizing: content-box;-webkit-box-sizing: content-box;box-sizing: content-box;}
+#iaWrap input[type="search"]::-webkit-search-cancel-button, #iaWrap input[type="search"]::-webkit-search-decoration {-webkit-appearance: none}
+#iaWrap button::-moz-focus-inner, #iaWrap input::-moz-focus-inner {border: 0;padding: 0;}
+#iaWrap textarea {overflow: auto;vertical-align: top;}
+#iaWrap table {border-collapse: collapse;border-spacing: 0;}
+#iaWrap section:not([class]) tr [data-task="0"], #iaWrap tfoot tr:nth-child(1) th, #iaWrap footer thead th:nth-child(2), #iaWrap footer tfoot td:nth-child(2) {color: #b90b0b;background-color: #feeeee;}
+#iaWrap section:not([class]) tr [data-task="1"], #iaWrap tfoot tr:nth-child(2) th, #iaWrap footer thead th:nth-child(3), #iaWrap footer tfoot td:nth-child(3) {color: #5f8b33;background-color: #eaf5e1;}
+#iaWrap section:not([class]) tr [data-task="2"], #iaWrap tfoot tr:nth-child(3) th, #iaWrap footer thead th:nth-child(4), #iaWrap footer tfoot td:nth-child(4) {color: #f2ac1a;background-color: #fffbe5;}
+#iaWrap section:not([class]) tr [data-task="3"], #iaWrap tfoot tr:nth-child(4) th, #iaWrap footer thead th:nth-child(5), #iaWrap footer tfoot td:nth-child(5) {color: #23485a;background-color: #eef7fc;}
+#iaWrap section:not([class]) tr [data-task="4"], #iaWrap tfoot tr:nth-child(5) th, #iaWrap footer thead th:nth-child(6), #iaWrap footer tfoot td:nth-child(6) {color: #892997;background-color: #f4eefc;}
+#iaWrap .delayBefore {color: #5f8b33}
+#iaWrap .delayAfter {color: #b90b0b}
+#iaWrap .delayToday {color: #23485a}
+#iaWrap .delayError {color: #f2ac1a}
+#iaWrap nav + h2, #iaWrap footer b, #iaWrap tfoot b, #iaWrap footer h2, #iaWrap footer caption {display: block;overflow: hidden;position: absolute;left: 0;top: 0;width: 1px;height: 1px;text-indent: -1px;}
+#iaWrap {min-width: 1000px;margin: 100px auto 0;padding-bottom: 50px;color: #777;border-bottom: 20px solid #333;font: .75em/1 "helveticaneue-light", "helvetica neue light", "helvetica neue", helvetica, arial, sans-serif;}
+#iaWrap section, #iaWrap footer, #iaWrap header {width: 95%;margin: auto;}
+#iaWrap h1, #iaWrap h2, #iaWrap h3 {color: #333;font-weight: normal;letter-spacing: -1px;}
+#iaWrap h1 {position: relative;margin-bottom: 50px;padding: 50px 0 25px;border: 4px double #eee;border-width: 4px 0 1px;font: italic 2.3em "droid serif", georgia, times, serif;}
+#iaWrap h1 em {font-size: 1.5em}
+#iaWrap h2 {letter-spacing: 1px}
+#iaWrap nav h2 {width: 95%;height: 30px;margin: 0 auto;padding: 0;font-size: 1.2em;line-height: 30px;}
+#iaWrap nav h2::after {content: ": "}
+#iaWrap .noticeWrap h2 {position: absolute;top: 0;right: 0;bottom: 0;left: 0;margin: auto auto auto 10px;width: 150px;height: 150px;border-radius: 150px;color: #fff;font-size: 2em;text-align: center;line-height: 150px;letter-spacing: 3px;background-color: #666;animation: bgChange 5s linear 2s;-webkit-animation: bgChange 5s linear 2s;}
+#iaWrap .noticeWrap h2::before {content: "*"}
+@keyframes bgChange {0% { color: #fff;background-color: #ccc;} 10%{color: #b90b0b;background-color: #feeeee;} 20%{color: #5f8b33;background-color: #eaf5e1;} 30%{color: #f2ac1a;background-color: #fffbe5;} 40%{color: #23485a;background-color: #eef7fc;} 50%{color: #892997;background-color: #f4eefc;} 60%{color: #23485a;background-color: #eef7fc;} 70%{color: #f2ac1a;background-color: #fffbe5;} 80%{color: #5f8b33;background-color: #eaf5e1;} 90%{color: #b90b0b;background-color: #feeeee;} 100%{color: #fff;background-color: #ccc;}}
+@-webkit-keyframes bgChange {0% { color: #fff;background-color: #ccc;} 10%{color: #b90b0b;background-color: #feeeee;} 20%{color: #5f8b33;background-color: #eaf5e1;} 30%{color: #f2ac1a;background-color: #fffbe5;} 40%{color: #23485a;background-color: #eef7fc;} 50%{color: #892997;background-color: #f4eefc;} 60%{color: #23485a;background-color: #eef7fc;} 70%{color: #f2ac1a;background-color: #fffbe5;} 80%{color: #5f8b33;background-color: #eaf5e1;} 90%{color: #b90b0b;background-color: #feeeee;} 100%{color: #fff;background-color: #ccc;}}
+#iaWrap .filterWrap h2 {margin: 0 0 10px;font-size: 1.8em;text-align: center;}
+#iaWrap section:not([class]) h2 {color: #eee;margin: 0;border-bottom: 2px solid;font: italic 3em "droid serif", georgia, times, serif;text-align: right;opacity: .7;}
+#iaWrap h3 {margin: 50px 0 0 0;font-size: 1.8em;}
+#iaWrap h3:before {counter-increment: menu;content: "Menu" counter(menu) ": ";font-size: .8em;letter-spacing: 0px;}
+#iaWrap a {color: #205589;text-decoration: none;}
+#iaWrap a:hover, #iaWrap a:focus {text-decoration: underline}
+#iaWrap i {margin-right: 3px;font-style: normal;}
+#iaWrap b {font-weight: normal}
+#iaWrap ::selection {background: #f2ebff}
+#iaWrap nav {overflow: hidden;position: absolute;top: 50px;left: 0;width: 100%;min-width: 1000px;}
+#iaWrap nav ul {overflow: hidden;width: 95%;margin: -30px auto 0;padding: 0 0 10px;border-bottom: 5px solid #333;list-style: none;}
+#iaWrap nav li, #iaWrap nav a {float: left}
+#iaWrap nav a {position: relative;height: 30px;margin: 0 10px;color: #333;font-size: 1.2em;font-weight: bold;text-decoration: none;line-height: 30px;transition: .3s ease-out;}
+#iaWrap nav a:hover {color: #b90b0b;transition: .3s;}
+#iaWrap nav li:not(:first-child) a::before {content: "";display: block;position: absolute;top: 10px;left: -10px;width: 1px;height: 10px;background-color: #aaa;}
+#iaWrap nav li:first-child a {margin-left: 90px}
+#iaWrap section {counter-reset: menu;margin-top: 50px;padding: 25px 0;}
+#iaWrap .noticeWrap {position: relative;min-height: 100px;margin-bottom: 25px;padding: 50px 0;border-bottom: 1px dashed #eee;}
+#iaWrap .noticeWrap ul {margin: 0 10px 0 160px;line-height: 1.5;}
+#iaWrap table {width: 100%;border: 1px solid #e0e0e0;border-bottom-width: 2px;font-size: .95em;}
+#iaWrap caption {margin: -10px 0 5px;padding-bottom: 5px;border-bottom: 1px dashed #ccc;font-size: 1em;text-align: right;}
+#iaWrap caption:before {content: "Target path : "}
+#iaWrap thead th {color: #666;padding: 15px 5px;border: 1px solid #e0e0e0;border-bottom-width: 2px;font-weight: normal;background: #f3f3f3;}
+#iaWrap tbody tr:nth-child(2n) td, #iaWrap tbody tr:nth-child(2n) th {background-color: #f8f8f8}
+#iaWrap tbody th, #iaWrap tbody td {padding: 10px 5px;border: 1px solid #e0e0e0;font-weight: normal;background: #fcfcfc;transition: .3s ease-out;}
+#iaWrap tbody tr:hover td {color: #000;background-color: #f3f9ff;transition: .3s;}
+#iaWrap tbody td:last-child {text-align: center}
+#iaWrap tfoot {border-top: 3px double #ccc}
+#iaWrap tfoot th, #iaWrap tfoot td {color: #333;padding: 5px;border: 1px solid #e0e0e0;font-weight: normal;background: #fcfcfc;}
+#iaWrap tfoot th {padding: 3px 10px;text-align: right;background-color: #eee;}
+#iaWrap th:first-child {width: 6%}
+#iaWrap .dueDate {width: 7%}
+#iaWrap .dueDate, #iaWrap td:first-child {text-align: center}
+#iaWrap footer {margin-top: -10px;margin-bottom: 25px;padding: 0 10px;}
+#iaWrap footer table {text-align: center}
+#iaWrap footer th, #iaWrap footer td {border-width: 3px;border-color: #fff;}
+#iaWrap footer th:first-child {width: auto}
+#iaWrap footer thead th {letter-spacing: 1px;font-size: 1.3em;background-color: #fff !important;}
+#iaWrap footer thead th:first-child, #iaWrap footer tbody th:first-child {text-align: right;border-left-width: 1px;}
+#iaWrap footer tbody tr:last-child th, #iaWrap footer tbody tr:last-child td {border-bottom-width: 15px}
+#iaWrap footer tfoot th, #iaWrap footer tfoot td {padding: 10px;font-size: 1.5em;}
+#iaWrap footer tfoot th:first-child {color: #666;background-color: #f3f3f3;}
+#iaWrap .filterWrap {margin-top: 0;border-top: 1px dashed #eee;border-bottom: 1px dashed #ccc;background-color: #fcfcfc;}
+#iaWrap .filterWrap fieldset {border: none;margin: 0;padding: 0 10px;overflow: hidden;text-align: center;}
+#iaWrap .filterWrap legend {display: none}
+#iaWrap .filterWrap label {display: inline-block;margin-right: 10px;padding: 5px 0;font-size: 1.2em;}
+#iaWrap .filterWrap input {margin-right: 5px}
+#iaWrap .filterWrap b::after {content: ":"}
+#iaWrap .filterWrap i {margin-left: 5px}
+#iaWrap .people {text-align:center}
+#iaWrap nav a { letter-spacing: -1px; }
+#iaWrap .design, #iaWrap .date { text-align: center; }
+#iaWrap .previewIframe { display: block; position: fixed; top: 0; left: 0; background: #fff; width: 400px; height: 100%; border: 1px solid #000; z-index: 999; }
+#iaWrap .delete { text-decoration: line-through; }

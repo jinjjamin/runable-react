@@ -1,0 +1,103 @@
+/* ==========================================================================
+   UI Guide 독립 화면 (/guide) 전용 스타일 (AGENTS.md 6.4, 6.4.1)
+   - 01은 사용자가 제공한 Guide CSS 원본입니다. 값을 바꾸지 않습니다.
+   - 02는 원본에 없는 동작(메뉴 활성, 키보드 포커스)과 기본 스타일만 덧붙인 규칙이며 .guideWrap 범위로 한정합니다.
+   ========================================================================== */
+
+/* 01. Guide CSS 원본 (AGENTS.md 6.4.1) ------------------------------------- */
+.guideWrap {min-height: 100vh;background: #f6f7f9;color: #1d2129;}
+
+/* sidebar */
+.guideSide {position: fixed;left: 0;top: 0;width: 250px;height: 100vh;padding: 40px 28px;box-sizing: border-box;background: #111318;color: #fff;}
+.guideLogo { margin: 0 0 50px; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+.guideNav { display: flex; flex-direction: column; gap: 4px; }
+.guideNav strong { margin: 26px 0 10px; color: #777e8c; font-size: 11px; letter-spacing: 1.2px; }
+.guideNav a { display: block; padding: 9px 12px; border-radius: 8px; color: #b8bdc7; font-size: 14px; text-decoration: none; transition: 0.2s; }
+.guideNav a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+/* content */
+.guideContent { margin-left: 250px; padding: 70px 70px 150px; }
+.guideHead { margin-bottom: 70px; }
+.guideBadge { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 20px; background: #111318; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+.guideHead h2 { margin: 18px 0 10px; font-size: 42px; line-height: 1.2; letter-spacing: -1.5px; }
+.guideHead p { margin: 0; color: #777; font-size: 15px; }
+
+/* section */
+.guideSection { margin-top: 60px; padding-top: 20px; }
+.guideTitle { display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 20px; border-bottom: 1px solid #dadde3; }
+.guideCategory { display: block; margin-bottom: 7px; color: #8a8f99; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+.guideTitle h3 { margin: 0; font-size: 30px; letter-spacing: -0.8px; }
+.guidePath { color: #999; font-family: monospace; font-size: 12px; }
+
+/* item */
+.guideItem { margin-top: 26px; overflow: hidden; border: 1px solid #e1e3e8; border-radius: 14px; background: #fff; }
+.guideItemHead { padding: 20px 24px; border-bottom: 1px solid #eeeeef; }
+.guideItemHead strong { display: block; font-size: 15px; }
+.guideItemHead p { margin: 6px 0 0; color: #888; font-size: 13px; }
+.guidePreview { display: flex; flex-direction: column; gap: 18px; padding: 34px; }
+
+/* util */
+.guideFlex { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.guideFlex.alignEnd { align-items: flex-end; }
+
+/* props table */
+.guideTableWrap { overflow: hidden; border: 1px solid #e5e7eb; border-radius: 10px; }
+.guideTable { width: 100%; border-collapse: collapse; }
+.guideTable th { padding: 13px 16px; background: #f7f8fa; color: #666; font-size: 12px; font-weight: 600; text-align: left; }
+.guideTable td { padding: 14px 16px; border-top: 1px solid #eee; color: #555; font-size: 13px; }
+.guideTable code { padding: 3px 6px; border-radius: 5px; background: #f1f3f5; color: #333; font-size: 12px; }
+
+/* code */
+.guideCode { overflow-x: auto; margin: 0; padding: 22px; border-radius: 10px; background: #17191e; color: #e9ebef; font-family: Consolas, monospace; font-size: 13px; line-height: 1.7; }
+.guideValues { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.guideValues code { display: inline-flex; align-items: center; min-height: 24px; padding: 2px 8px; border: 1px solid #e1e4e8; border-radius: 5px; background: #f6f8fa; color: #555; font-size: 11px; }
+
+/* guide Input */
+.guideInputList { display: flex; flex-direction: column; gap: 12px; }
+
+/* 02. 추가 규칙 (원본 외) ---------------------------------------------------- */
+/* body 기본 여백은 Guide 화면에서만 제거합니다 (common.css에 의존하지 않음). */
+body:has(.guideWrap) { margin: 0; }
+
+.guideWrap { font-family: 'Noto Sans KR', -apple-system, 'Malgun Gothic', sans-serif; }
+
+/* 왼쪽 메뉴 활성 상태 (AGENTS.md 6.4: .guideWrap .guideNav a.on) */
+.guideWrap .guideNav a.on { background: rgba(255,255,255,0.12); color: #fff; font-weight: 700; }
+
+/* 키보드 포커스 표시 */
+.guideWrap .guideNav a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* 왼쪽 메뉴 스크롤: 메뉴가 화면보다 길면 메뉴 영역만 세로 스크롤 (로고는 고정) */
+.guideWrap .guideSide { display: flex; flex-direction: column; }
+.guideWrap .guideLogo { flex: none; }
+.guideWrap .guideNav { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; margin-right: -16px; padding-right: 12px; }
+.guideWrap .guideNav > * { flex-shrink: 0; }
+
+/* 아이폰 스타일 얇은 스크롤바: 4px, 반투명 흰색 막대, 배경·위아래 화살표 없음
+   - Chrome은 scrollbar-width를 쓰면 ::-webkit-scrollbar가 무시되고 화살표가 생겨, 표준 속성은 Firefox에만 적용 */
+@supports not selector(::-webkit-scrollbar) {
+    .guideWrap .guideNav { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.25) transparent; }
+}
+.guideWrap .guideNav::-webkit-scrollbar { width: 4px; }
+.guideWrap .guideNav::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+.guideWrap .guideNav::-webkit-scrollbar-track { background: transparent; }
+.guideWrap .guideNav::-webkit-scrollbar-thumb { border-radius: 4px; background: rgba(255,255,255,0.25); }
+.guideWrap .guideNav::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+
+/* 실제 컴포넌트 예제 영역: 모바일 기준 너비 360px (컴포넌트 스타일은 common.css의 .siteScope) */
+.guideWrap .guideDemo { width: 360px; max-width: 100%; border: 1px solid #e1e3e8; background: #fff; }
+/* 화면 좌우 여백(24px)이 있는 예제: 버튼 등 콘텐츠 영역 컴포넌트 */
+.guideWrap .guideDemoPad { display: flex; flex-direction: column; gap: 12px; padding: 24px; }
+
+/* 화면 맨 아래 버튼 예제를 세로로 쌓아 보기 (간격 12) */
+.guideWrap .guideDemoStack { display: flex; flex-direction: column; gap: 12px; }
+
+/* 로딩 미리보기: 전체 화면(fixed) 로딩을 Guide 상자 안에 표시 (360 × 240) */
+.guideWrap .guideDemoLoading { position: relative; height: 240px; }
+.guideWrap .guideDemoLoading .loading { position: absolute; z-index: auto; }
+
+/* 메뉴 이동 시 섹션 제목이 화면 맨 위에 붙지 않도록 여백 */
+.guideWrap .guideSection { scroll-margin-top: 20px; }
+
+/* 슬라이드 예제: 데모 상자 안 위아래 여백 */
+.guideWrap .guideDemoSlider { padding: 24px 0; }

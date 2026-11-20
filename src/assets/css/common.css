@@ -1,0 +1,1638 @@
+@charset "UTF-8";
+/* ==========================================================================
+   러너블 일반 퍼블리싱 페이지 공통 스타일 (AGENTS.md 5.3, docs/design.md 6장)
+   - 범위 기준 클래스는 .siteScope 입니다.
+     · 일반 페이지 루트: <div id="siteWrap" class="siteScope"> (Layout)
+     · Guide 예제 영역: <div class="siteScope"> (/guide에서 실제 컴포넌트 미리보기)
+   - #siteWrap 전용 규칙(화면 높이, body 여백)은 일반 페이지에만 적용됩니다.
+   - /ia에는 .siteScope가 없으므로 적용되지 않습니다.
+   - main.tsx에서 전역 import하지 않고 Layout과 Guide에서만 import합니다.
+   - 폰트(Noto Sans KR 500·700)는 index.html의 Google Fonts 링크로 불러옵니다.
+   ========================================================================== */
+
+/* 01. Design tokens --------------------------------------------------------- */
+/* Figma 러너블 v1.1 스타일 값 (docs/design.md 6장). 주석은 Figma 스타일 이름입니다. */
+.siteScope {
+    /* 색상 */
+    --color-primary-50: #f4f6fb;    /* Primary/Primary-50: 입력창 배경 */
+    --color-primary-100: #e6ebff;   /* Primary/Primary-100: 보조 버튼, D-day 박스 */
+    --color-primary-200: #ccd6ff;   /* Primary/Primary-200: 비활성 버튼 배경 */
+    --color-primary-500: #0132fd;   /* Primary/Primary-500: 주 버튼, 활성 탭, 체크박스 */
+    --color-primary-700: #0128ca;   /* Primary/Primary-700: 스플래시 배경 */
+    --color-black: #000000;         /* Basic/Black: 기본 텍스트 */
+    --color-white: #ffffff;         /* Basic/White */
+    --color-gray-50: #f5f5f5;       /* Gray Scale/Gray-50: 노데이터 박스 배경, Bottom Bar 구분선 */
+    --color-gray-100: #d8d8d8;      /* Gray Scale/Gray-100: 약관 표 구분선 */
+    --color-gray-200: #cccccc;     /* Gray Scale/Gray-200: 입력창 옆 비활성 버튼 */
+    --color-gray-300: #c2c2c2;      /* Gray Scale/Gray-300: placeholder, 비활성 탭·체크박스 */
+    --color-gray-500: #979797;      /* Gray Scale/Gray-500: 러닝 기록 날짜 */
+    --color-gray-700: #818181;      /* Gray Scale/Gray-700: 보조 텍스트, 링크 */
+    --color-gray-900: #3c3c3c;      /* Gray Scale/Gray-900: 팝업 설명 문구, 아이콘 */
+    --color-danger-500: #ea3323;    /* Semantic/Danger-500: 에러 테두리·메시지 */
+    --color-dim: rgba(0, 0, 0, 0.6);/* Basic/Dim: 팝업 배경 */
+
+    /* 폰트 */
+    --font-family: 'Noto Sans KR', sans-serif;
+    --text-h1: 700 24px/32px var(--font-family);        /* Noto/Headline/H1, 자간 -0.5px */
+    --text-h2: 700 20px/28px var(--font-family);        /* Noto/Headline/H2, 자간 -0.5px */
+    --text-h4: 700 16px/24px var(--font-family);        /* Noto/Headline/H4: Top Bar 제목, 탭 */
+    --text-h3: 700 18px/26px var(--font-family);        /* 러닝 기록 카드 제목 (18/26 Bold) */
+    --text-h5: 700 14px/24px var(--font-family);        /* Headline/H4(14px): 대회 카드 종목 */
+    --text-b1: 500 16px/24px var(--font-family);        /* 러닝 기록 거리·시간·페이스 (16/24) */
+    --text-b2: 500 14px/22px var(--font-family);        /* Noto/Body/B2: 본문, 입력값 */
+    --text-button-l: 700 14px/22px var(--font-family);  /* Noto/Button/Button(L) */
+    --text-button-s: 700 12px/20px var(--font-family);  /* Noto/Button/Button(S): 작은 버튼 */
+    --text-button-m: 700 12px/20px var(--font-family);  /* Form/Button Medium: Floating Button */
+    --text-c0: 500 12px/20px var(--font-family);        /* Noto/Caption/C0, 자간 -0.5px */
+    --text-c1: 500 11px/16px var(--font-family);        /* Noto/Caption/C1: 에러 메시지, 툴팁 */
+    --text-c2: 500 10px/14px var(--font-family);        /* Noto/Caption/C2: Bottom Bar 라벨 */
+    --text-timer: 500 12px/20px Roboto, var(--font-family); /* Roboto/Caption/C0: 인증 남은 시간 */
+    --letter-spacing-tight: -0.5px;
+
+    /* 간격 */
+    --space-page: 24px;             /* 화면 좌우 여백 (360 - 24 * 2 = 콘텐츠 312px) */
+    --space-8: 8px;
+    --space-12: 12px;
+    --space-16: 16px;
+    --space-20: 20px;
+    --space-24: 24px;
+    --space-32: 32px;
+
+    /* 모서리 및 그림자 */
+    --radius-card: 6px;             /* 카드 (D-day 대회 카드) */
+    --radius-card-l: 8px;           /* 이미지 대회 카드, 러닝 기록 카드 */
+    --radius-button: 8px;           /* 버튼 (size l) */
+    --radius-button-s: 4px;         /* 작은 버튼 (size m) */
+    --radius-pill: 40px;            /* Floating Button */
+    --radius-box: 12px;             /* 노데이터 박스 */
+    --shadow-elevation-2: 0 2px 10px rgba(0, 0, 0, 0.12); /* Elevation 2 */
+
+    /* 레이아웃 */
+    --top-bar-height: 56px;         /* Top Bar: padding 12px 16px */
+    --bottom-bar-height: 62px;      /* Bottom Bar: 구분선 1px + 탭 46px + 아래 여백 8px */
+    --button-height: 56px;
+    --button-height-s: 42px;
+    --input-height: 46px;
+
+    color: var(--color-black);
+    font: var(--text-b2);
+    word-break: keep-all;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 02. Reset / Base ---------------------------------------------------------- */
+/* body 기본 여백은 일반 페이지(#siteWrap)에서만 제거합니다 (/ia, /guide 영향 없음). */
+body:has(#siteWrap) {
+    margin: 0;
+}
+
+/* 일반 페이지 루트: Header · Container · Footer(BottomBar) 세로 배치 (docs/design.md 1.2) */
+#siteWrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--color-white);
+}
+
+.siteScope,
+.siteScope *,
+.siteScope *::before,
+.siteScope *::after {
+    box-sizing: border-box;
+}
+
+.siteScope h1,
+.siteScope h2,
+.siteScope h3,
+.siteScope h4,
+.siteScope h5,
+.siteScope h6,
+.siteScope p,
+.siteScope ul,
+.siteScope ol,
+.siteScope dl,
+.siteScope dd,
+.siteScope figure,
+.siteScope fieldset,
+.siteScope blockquote {
+    margin: 0;
+}
+
+.siteScope h1,
+.siteScope h2,
+.siteScope h3,
+.siteScope h4,
+.siteScope h5,
+.siteScope h6 {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.siteScope ul,
+.siteScope ol {
+    padding: 0;
+    list-style: none;
+}
+
+.siteScope fieldset {
+    padding: 0;
+    border: 0;
+}
+
+.siteScope a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.siteScope button,
+.siteScope input,
+.siteScope select,
+.siteScope textarea {
+    margin: 0;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+}
+
+.siteScope button {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.siteScope button:disabled {
+    cursor: default;
+}
+
+.siteScope img,
+.siteScope svg {
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.siteScope table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.siteScope :focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+/* hidden 속성은 display를 지정한 클래스보다 우선해서 숨깁니다 (예: 탭 내용 영역) */
+.siteScope [hidden] {
+    display: none !important;
+}
+
+/* 화면에는 숨기고 스크린리더에는 읽히는 텍스트 */
+.siteScope .blind {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* 03. Common components ----------------------------------------------------- */
+/* Button, Input, Checkbox, Tabs, Popup, NoData 등 (docs/tasks.md Phase 2) */
+
+/* Button: Figma Button (size l 56 / m 42, padding 0 24px, 아이콘 간격 4) */
+.siteScope .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    height: var(--button-height);
+    padding: 0 var(--space-24);
+    border: 2px solid transparent;
+    border-radius: var(--radius-button);
+    font: var(--text-button-l);
+    text-align: center;
+}
+
+.siteScope .btn img {
+    flex: none;
+    width: 24px;
+    height: 24px;
+}
+
+.siteScope .btn.primary {
+    color: var(--color-white);
+    background-color: var(--color-primary-500);
+}
+
+.siteScope .btn.secondary {
+    color: var(--color-primary-500);
+    background-color: var(--color-primary-100);
+}
+
+.siteScope .btn.outline {
+    color: var(--color-primary-500);
+    border-color: var(--color-primary-500);
+    background-color: var(--color-white);
+}
+
+.siteScope .btn.sizeM {
+    height: var(--button-height-s);
+    border-radius: var(--radius-button-s);
+    font: var(--text-button-s);
+}
+
+/* 화면 맨 아래 꽉 찬 버튼 (Figma Button Type Page, 360×56, 모서리 없음) */
+.siteScope .btn.page {
+    border-radius: 0;
+}
+
+/* 비활성: 시안에는 primary만 있음 (Primary-200 배경 + 흰 글자) */
+.siteScope .btn.primary:disabled {
+    background-color: var(--color-primary-200);
+}
+
+/* 버튼 두 개 나란히 (Figma Combination, 간격 8) */
+.siteScope .buttonGroup {
+    display: flex;
+    gap: 8px;
+}
+
+.siteScope .buttonGroup > .btn {
+    flex: 1;
+    min-width: 0;
+}
+
+/* FloatingButton: Figma Floating Button (높이 42, 모서리 40, padding 0 16px, 간격 4, Elevation 2) */
+.siteScope .floatingBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: var(--button-height-s);
+    padding: 0 var(--space-16);
+    border-radius: var(--radius-pill);
+    color: var(--color-primary-500);
+    font: var(--text-button-m);
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-elevation-2);
+}
+
+.siteScope .floatingBtn.move .floatingBtnIcon {
+    width: 24px;
+    height: 24px;
+}
+
+.siteScope .floatingBtn.plus .floatingBtnIcon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Input: Figma Text Field (라벨·입력·문구 간격 4, 입력 높이 46, padding 0 12px, 요소 간격 8) */
+.siteScope .inputField {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.siteScope .inputLabel {
+    display: flex;
+    align-items: flex-start;
+    font: var(--text-c0);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+/* 필수 표시: 라벨 오른쪽 위 4px 빨간 점 */
+.siteScope .inputRequired {
+    flex: none;
+    width: 4px;
+    height: 4px;
+    margin-left: 2px;
+    border-radius: 50%;
+    background-color: var(--color-danger-500);
+}
+
+.siteScope .inputLabelNote {
+    margin-left: 6px;
+    color: var(--color-gray-700);
+    font: var(--text-c1);
+    letter-spacing: 0;
+}
+
+.siteScope .inputRow {
+    display: flex;
+}
+
+.siteScope .inputBox {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    height: var(--input-height);
+    padding: 0 12px;
+    border: 1px solid transparent;
+    background-color: var(--color-primary-50);
+}
+
+.siteScope .inputBox:focus-within {
+    border-color: var(--color-primary-500);
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-elevation-2);
+}
+
+.siteScope .inputField.isError .inputBox {
+    border-color: var(--color-danger-500);
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-elevation-2);
+}
+
+.siteScope .inputControl {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    outline: none;
+    color: var(--color-black);
+    font: var(--text-b2);
+    background: transparent;
+}
+
+.siteScope .inputControl::placeholder {
+    color: var(--color-gray-300);
+}
+
+/* 입력 영역 테두리로 포커스를 보여주므로 입력 자체의 포커스 테두리는 생략 */
+.siteScope .inputControl:focus-visible {
+    outline: none;
+}
+
+.siteScope .inputTimer {
+    flex: none;
+    color: var(--color-danger-500);
+    font: var(--text-timer);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+.siteScope .inputIconButton,
+.siteScope .inputStatusIcon {
+    flex: none;
+    width: 24px;
+    height: 24px;
+}
+
+.siteScope .inputIconButton img {
+    display: block;
+    width: 24px;
+    height: 24px;
+}
+
+.siteScope .inputIconButton.passwordToggle,
+.siteScope .inputIconButton.passwordToggle img {
+    width: 32px;
+    height: 32px;
+}
+
+/* 입력창 오른쪽 버튼 (예: 전송하기). 비활성은 Gray-200 */
+.siteScope .inputButton {
+    flex: none;
+    height: var(--input-height);
+    padding: 0 var(--space-16);
+    color: var(--color-white);
+    font: var(--text-button-l);
+    background-color: var(--color-primary-500);
+}
+
+.siteScope .inputButton:disabled {
+    background-color: var(--color-gray-200);
+}
+
+.siteScope .inputMessage {
+    color: var(--color-gray-700);
+    font: var(--text-c1);
+}
+
+.siteScope .inputMessage.error {
+    color: var(--color-danger-500);
+}
+
+/* Checkbox: Figma Checkbox (아이콘 24, 라벨 B2, 간격 8). 실제 input은 화면에서 숨김 */
+.siteScope .checkbox,
+.siteScope .radio {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: var(--text-b2);
+    cursor: pointer;
+}
+
+.siteScope .checkboxInput,
+.siteScope .radioInput {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+}
+
+.siteScope .checkboxIcon {
+    flex: none;
+    width: 24px;
+    height: 24px;
+}
+
+.siteScope .checkboxInput:focus-visible + .checkboxIcon,
+.siteScope .radioInput:focus-visible + .radioMark {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+/* Radio: Figma Radio Button (24 영역 안 22px 원, 테두리 2px, 가운데 점 12px) */
+.siteScope .radioMark {
+    position: relative;
+    flex: none;
+    width: 24px;
+    height: 24px;
+}
+
+.siteScope .radioMark::before,
+.siteScope .radioMark::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+}
+
+.siteScope .radioMark::before {
+    inset: 1px;
+    border: 2px solid var(--color-gray-300);
+    background-color: var(--color-white);
+}
+
+.siteScope .radioMark::after {
+    top: 6px;
+    left: 6px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--color-gray-300);
+}
+
+.siteScope .radioInput:checked + .radioMark::before {
+    border-color: var(--color-primary-500);
+}
+
+.siteScope .radioInput:checked + .radioMark::after {
+    background-color: var(--color-primary-500);
+}
+
+/* 라디오 2열 배치 (Figma: 가로 간격 12, 세로 간격 8) */
+.siteScope .radioGroup {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+}
+
+/* TextLink: Figma Link (Size Medium 14px Gray-700 / Small 12px Gray-900, 밑줄), 화살표 Icon_16 / Arrow */
+.siteScope .textLink {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-gray-700);
+    font: var(--text-b2);
+}
+
+.siteScope .textLinkLabel {
+    text-decoration: underline;
+}
+
+.siteScope .textLink.sizeS {
+    color: var(--color-gray-900);
+    font: var(--text-c0);
+    letter-spacing: 0;
+}
+
+.siteScope .textLinkArrow {
+    flex: none;
+    width: 16px;
+    height: 16px;
+}
+
+/* NoData: Figma Nodata (아이콘 48, 간격 16) */
+.siteScope .noData {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-16);
+    text-align: center;
+    background-color: var(--color-gray-50);
+}
+
+.siteScope .noDataIcon {
+    width: 48px;
+    height: 48px;
+}
+
+/* 문구 + 버튼·링크 묶음 (Figma Text: 세로 정렬, box 간격 8 / section 간격 16) */
+.siteScope .noDataText {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-16);
+}
+
+.siteScope .noDataAction {
+    display: flex;
+}
+
+/* box: 회색 둥근 상자 (padding 32 20 36, radius 12), 문구 B2 Gray-700 */
+.siteScope .noData.box {
+    padding: var(--space-32) var(--space-20) 36px;
+    border-radius: var(--radius-box);
+}
+
+.siteScope .noData.box .noDataText {
+    gap: var(--space-8);
+}
+
+.siteScope .noData.box .noDataMessage {
+    color: var(--color-gray-700);
+    font: var(--text-b2);
+}
+
+/* section: 너비 전체 회색 영역, 문구 C0 검정.
+   Figma 영역 높이 274 고정 → 내용(아이콘 48 + 문구 2줄 40 + 버튼 42 + 간격 32) 기준 위아래 56으로 계산 */
+.siteScope .noData.section {
+    padding: 56px var(--space-24);
+}
+
+.siteScope .noData.section .noDataMessage {
+    color: var(--color-black);
+    font: var(--text-c0);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Loading: Figma CO 로딩 (흰 화면 가운데 80×80 GIF). 팝업(z-index 100)보다 위 */
+.siteScope .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background-color: var(--color-white);
+}
+
+.siteScope .loadingImage {
+    width: 80px;
+    height: 80px;
+}
+
+/* TermsForm: Figma CO 약관폼 (+CONTENTS padding 32 24 40, 섹션 간격 48) */
+.siteScope .termsForm {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    padding: var(--space-32) var(--space-24) 40px;
+    background-color: var(--color-white);
+    word-break: normal; /* 긴 약관 본문은 Figma처럼 글자 단위 줄바꿈 (기본 keep-all 대신) */
+}
+
+/* 섹션: 타이틀·설명 묶음과 블록 사이 16 */
+.siteScope .termsSection,
+.siteScope .termsText {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+}
+
+.siteScope .termsTitle {
+    margin: 0;
+    color: var(--color-black);
+    font: var(--text-h4);
+}
+
+.siteScope .termsParagraphs p {
+    margin: 0;
+    color: var(--color-gray-700);
+    font: var(--text-b2);
+}
+
+/* 블록: 서브 타이틀·표·목록 사이 8 */
+.siteScope .termsBlock {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+}
+
+.siteScope .termsSubTitle {
+    margin: 0;
+    color: var(--color-black);
+    font: var(--text-b2);
+}
+
+/* 표: 위 1px Gray-700, 머리 Gray-50 + Button(S), 칸 사이·행 아래 1px Gray-100, 내용 C0 Gray-700 */
+.siteScope .termsTable {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-top: 1px solid var(--color-gray-700);
+}
+
+.siteScope .termsTable th,
+.siteScope .termsTable td {
+    padding: 10px var(--space-16);
+    color: var(--color-gray-700);
+    vertical-align: middle;
+    white-space: pre-line;
+    word-break: keep-all; /* 좁은 표 칸은 낱말 단위 (Figma 칸 높이 160과 일치) */
+    overflow-wrap: anywhere;
+}
+
+.siteScope .termsTable th + th,
+.siteScope .termsTable td + td {
+    border-left: 1px solid var(--color-gray-100);
+}
+
+.siteScope .termsTable th {
+    font: var(--text-button-s);
+    text-align: center;
+    background-color: var(--color-gray-50);
+}
+
+.siteScope .termsTable td {
+    font: var(--text-c0);
+    letter-spacing: var(--letter-spacing-tight);
+    text-align: left;
+    border-bottom: 1px solid var(--color-gray-100);
+}
+
+/* 한 칸짜리 표는 내용 칸 padding 16 (Figma Contents01 72 = 16 + 40 + 16) */
+.siteScope .termsTable.single td {
+    padding: var(--space-16);
+}
+
+/* 목록: B2 Gray-700, 글머리(•) 또는 번호(1.) 내어쓰기 */
+.siteScope .termsList {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--color-gray-700);
+    font: var(--text-b2);
+}
+
+.siteScope .termsList.bullet {
+    list-style: disc;
+}
+
+.siteScope .termsList.number {
+    list-style: decimal;
+}
+
+/* Slider: Swiper 카드 슬라이드 (카드 너비는 내용이 정함, slidesPerView auto) */
+.siteScope .slider .sliderSlide {
+    width: auto;
+    height: auto;
+}
+
+/* RaceCard dday: 90×90 D-day 칸 + 정보 (D-DAY 파란 카드 / 그 외 흰 카드 + 그림자) */
+.siteScope .raceCard.dday {
+    display: flex;
+    min-height: 90px;
+    border-radius: var(--radius-card);
+    color: var(--color-black);
+    text-decoration: none;
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-elevation-2);
+}
+
+.siteScope .raceCard.dday:focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+.siteScope .raceCardDay {
+    position: relative;
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    border-radius: var(--radius-card) 0 0 var(--radius-card);
+    color: var(--color-primary-500);
+    font: var(--text-h2);
+    letter-spacing: var(--letter-spacing-tight);
+    background-color: var(--color-primary-100);
+}
+
+/* D-day 칸 오른쪽 세로 구분선 1×74 */
+.siteScope .raceCardDivider {
+    position: absolute;
+    top: 8px;
+    right: 0;
+    width: 1px;
+    height: 74px;
+    background-color: var(--color-primary-100);
+}
+
+.siteScope .raceCard.dday .raceCardInfo {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    padding: 14px;
+}
+
+/* 날짜 ↔ 제목 2, 제목 ↔ 종목 0 (Figma Race 90 = 14 + 16 + 2 + 22 + 22 + 14) */
+.siteScope .raceCard.dday .raceCardDate {
+    margin-bottom: 2px;
+    color: var(--color-gray-700);
+    font: var(--text-c1);
+}
+
+.siteScope .raceCard.dday .raceCardTitle {
+    overflow: hidden;
+    font: var(--text-button-l);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.siteScope .raceCard.dday .raceCardDistance {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--color-primary-500);
+    font: var(--text-button-l);
+}
+
+.siteScope .raceCardDistance img {
+    flex: none;
+    width: 16px;
+    height: 16px;
+}
+
+/* D-DAY: 칸·정보 모두 Primary-500, 글자 흰색(날짜 60%), 구분선 Primary-50 */
+.siteScope .raceCard.dday.isToday {
+    color: var(--color-white);
+    background-color: var(--color-primary-500);
+    box-shadow: none;
+}
+
+.siteScope .raceCard.dday.isToday .raceCardDay {
+    color: var(--color-white);
+    background-color: var(--color-primary-500);
+}
+
+.siteScope .raceCard.dday.isToday .raceCardDivider {
+    background-color: var(--color-primary-50);
+}
+
+.siteScope .raceCard.dday.isToday .raceCardDate {
+    color: var(--color-white);
+    opacity: 0.6;
+}
+
+.siteScope .raceCard.dday.isToday .raceCardDistance {
+    color: var(--color-white);
+}
+
+/* RaceCard image: 312 너비, 이미지 312×180 (위 모서리 8) + 정보 (padding 16 16 20, 간격 16) */
+.siteScope .raceCard.image {
+    width: 312px;
+    border-radius: var(--radius-card-l);
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-elevation-2);
+}
+
+.siteScope .raceCardThumb {
+    position: relative;
+    height: 180px;
+}
+
+.siteScope .raceCardImage {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-card-l) var(--radius-card-l) 0 0;
+    object-fit: cover;
+}
+
+/* 접수 깃발: 왼쪽 16·위 16, 높이 24, padding 2 8, Button(S) */
+.siteScope .raceCardFlag {
+    position: absolute;
+    top: var(--space-16);
+    left: var(--space-16);
+    display: flex;
+    margin: 0;
+    font: var(--text-button-s);
+}
+
+.siteScope .raceCardFlagStatus,
+.siteScope .raceCardFlagDate {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 24px;
+    padding: 2px var(--space-8);
+}
+
+.siteScope .raceCardFlagStatus {
+    border-radius: 4px 0 0 4px;
+    color: var(--color-white);
+    background-color: var(--color-primary-500);
+}
+
+.siteScope .raceCardFlagStatus img {
+    width: 16px;
+    height: 16px;
+}
+
+.siteScope .raceCardFlagStatus.isClosed {
+    border-radius: 4px;
+    background-color: var(--color-black);
+}
+
+.siteScope .raceCardFlagStatus.isUpcoming {
+    border-radius: 4px;
+    color: var(--color-primary-500);
+    background-color: var(--color-white);
+}
+
+/* 마감(finished): 이미지 위 검정 60% */
+.siteScope .raceCard.isFinished .raceCardThumb::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-card-l) var(--radius-card-l) 0 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.siteScope .raceCard.isFinished .raceCardFlag {
+    z-index: 1;
+}
+
+.siteScope .raceCardFlagDate {
+    border-radius: 0 4px 4px 0;
+    color: var(--color-primary-500);
+    background-color: var(--color-white);
+}
+
+/* 정보 영역 높이 198 고정(Figma 02): 종목이 1줄이어도 카드 높이 378 유지, 버튼은 아래쪽 */
+.siteScope .raceCardBody {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    min-height: 198px;
+    padding: var(--space-16) var(--space-16) var(--space-20);
+}
+
+.siteScope .raceCardBody .buttonGroup {
+    margin-top: auto;
+}
+
+.siteScope .raceCard.image .raceCardInfo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+}
+
+.siteScope .raceCard.image .raceCardDate {
+    margin: 0;
+    color: var(--color-gray-700);
+    font: var(--text-c0);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+.siteScope .raceCard.image .raceCardTitle {
+    margin: 0;
+    color: var(--color-black);
+    font: var(--text-h2);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+.siteScope .raceCard.image .raceCardDistance {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    margin: 0;
+    color: var(--color-primary-500);
+    font: var(--text-h5);
+}
+
+.siteScope .raceCard.image .raceCardDistance img {
+    margin-top: 4px;
+}
+
+/* RecordCard: 흰 카드 radius 8 + Elevation 2, padding 24 20 20 (깃발 있으면 20), 간격 12 */
+.siteScope .recordCard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    padding: var(--space-24) var(--space-20) var(--space-20);
+    border-radius: var(--radius-card-l);
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-elevation-2);
+}
+
+.siteScope .recordCard.hasFlag {
+    padding-top: var(--space-20);
+}
+
+.siteScope .recordCardHead {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* 대회명 깃발: padding 4 6, 10/14 Bold, Primary-100 + Primary-500, 깃발 ↔ 제목 6 */
+.siteScope .recordCardFlag {
+    margin-bottom: 6px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    color: var(--color-primary-500);
+    font: var(--text-c2);
+    font-weight: 700;
+    background-color: var(--color-primary-100);
+}
+
+.siteScope .recordCardTitle {
+    margin: 0;
+    color: var(--color-black);
+    font: var(--text-h3);
+}
+
+.siteScope .recordCardDate {
+    margin: 0;
+    color: var(--color-gray-500);
+    font: var(--text-b2);
+}
+
+/* 거리·시간·페이스 3칸 같은 너비 */
+.siteScope .recordCardData {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0;
+    color: var(--color-black);
+    font: var(--text-b1);
+}
+
+.siteScope .recordCardData dd {
+    margin: 0;
+}
+
+/* Tabs: Figma Tab (높이 60 = 위 16 + 탭 44, 좌우 24, 맨 아래 1px Gray-50 구분선) */
+.siteScope .tabs {
+    padding: var(--space-16) var(--space-24) 0;
+    background-color: var(--color-white);
+    box-shadow: inset 0 -1px 0 var(--color-gray-50);
+}
+
+.siteScope .tabList {
+    display: flex;
+}
+
+/* 탭 한 칸: 글자(H4) + 간격 16 + 밑줄 4 */
+.siteScope .tab {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-16);
+    min-width: 0;
+    color: var(--color-gray-300);
+    font: var(--text-h4);
+}
+
+.siteScope .tab::after {
+    content: "";
+    width: 100%;
+    height: 4px;
+    border-radius: 100px;
+}
+
+.siteScope .tab.on {
+    color: var(--color-black);
+}
+
+.siteScope .tab.on::after {
+    background-color: var(--color-primary-500);
+}
+
+/* Popup: Figma Dialog (Bottomsheet). 위쪽 모서리 16, padding 32 0 24, 내용·버튼 간격 32, Dim 60% */
+body:has(.siteScope .popupDim) {
+    overflow: hidden;
+}
+
+.siteScope .popupDim {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background-color: var(--color-dim);
+}
+
+.siteScope .popup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+    width: 100%;
+    padding: var(--space-32) 0 calc(var(--space-24) + env(safe-area-inset-bottom));
+    border-radius: 16px 16px 0 0;
+    background-color: var(--color-white);
+}
+
+.siteScope .popup:focus-visible {
+    outline: none;
+}
+
+.siteScope .popupContents {
+    display: flex;
+    flex-direction: column;
+}
+
+.siteScope .popupText {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 var(--space-24);
+}
+
+.siteScope .popupTitle {
+    color: var(--color-black);
+    font: var(--text-h2);
+    letter-spacing: var(--letter-spacing-tight);
+    white-space: pre-line;
+}
+
+.siteScope .popupDesc {
+    color: var(--color-gray-900);
+    font: var(--text-b2);
+}
+
+.siteScope .popupDesc em {
+    color: var(--color-primary-500);
+    font-style: normal;
+}
+
+.siteScope .popupComment {
+    color: var(--color-gray-700);
+    font: var(--text-c0);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+.siteScope .popupButtons {
+    padding: 0 var(--space-16);
+}
+
+/* 04. Layout ---------------------------------------------------------------- */
+/* Layout · Header · BottomBar (docs/design.md 1.2, 6.0) */
+#siteWrap #container {
+    flex: 1 0 auto;
+    width: 100%;
+}
+
+/* Header: Figma Top Bar (360 × 56, padding 12px 16px, gap 12px). 클래스명 topBar*는 기존 이름 유지 */
+.siteScope .topBar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: var(--space-12);
+    min-height: var(--top-bar-height);
+    padding: var(--space-12) var(--space-16);
+    background-color: var(--color-white);
+}
+
+.siteScope .topBarTitle {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    font: var(--text-h4);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.siteScope .topBarButton {
+    flex: none;
+    width: 32px;
+    height: 32px;
+}
+
+.siteScope .topBarButton img {
+    display: block;
+    width: 32px;
+    height: 32px;
+}
+
+.siteScope .topBar.isHome {
+    justify-content: space-between;
+}
+
+/* 파란 배경 Top Bar (RA1 레이스 목록) */
+.siteScope .topBar.isPrimary {
+    background-color: var(--color-primary-500);
+}
+
+.siteScope .topBarSide {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--space-12);
+}
+
+/* BottomBar: Figma Bottom Bar (높이 62 = 구분선 1 + 위 여백 7 + 탭 46 + 아래 여백 8)
+   - 아래 여백에 iOS 홈 인디케이터 영역(safe-area)을 더합니다. */
+.siteScope .bottomBar {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    padding-top: 7px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--color-gray-50);
+    background-color: var(--color-white);
+}
+
+.siteScope .bottomBarList {
+    display: flex;
+}
+
+.siteScope .bottomBarItem {
+    flex: 1;
+}
+
+.siteScope .bottomBarLink {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 46px;
+    color: var(--color-gray-300);
+    font: var(--text-c2);
+    text-align: center;
+}
+
+.siteScope .bottomBarLink.on {
+    color: var(--color-primary-500);
+}
+
+.siteScope .bottomBarLink img {
+    display: block;
+    width: 32px;
+    height: 32px;
+}
+
+/* 05. Publishing pages ------------------------------------------------------ */
+
+/* MY1 스플래시 (/splash): 화면 전체, Header 없음 */
+.siteScope .splash {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* 01 로고: Primary-700 배경, 세로 로고 110.67×600 오른쪽 32px, 세로 가운데 (Figma 위아래 20) */
+.siteScope .splash.logo {
+    justify-content: flex-end;
+    padding-right: var(--space-32);
+    background-color: var(--color-primary-700);
+}
+
+.siteScope .splashLogo {
+    width: 110.67px;
+    height: 600px;
+}
+
+/* 02 인트로: 흰 배경, 로고 280×79 가운데 (Figma left 40, top 280) */
+.siteScope .splash.intro {
+    justify-content: center;
+    background-color: var(--color-white);
+}
+
+.siteScope .splashIntroLogo {
+    width: 280px;
+    height: 79px;
+}
+
+/* ME1 로그인 (/login): Header 없음. 제목 124 + 입력 영역(남는 높이) + 아래 영역 210 = 640 */
+.siteScope .login {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* 제목: padding 64 24 32, H2 검정 */
+.siteScope .loginHead {
+    padding: 64px var(--space-24) var(--space-32);
+}
+
+.siteScope .loginTitle {
+    margin: 0;
+    color: var(--color-black);
+    font: var(--text-h2);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+/* 입력 영역: padding 0 24, 입력 묶음 ↔ 로그인 버튼 24 */
+.siteScope .loginForm {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    gap: var(--space-24);
+    padding: 0 var(--space-24) var(--space-24);
+}
+
+/* 입력창 사이 12, 입력창 ↔ 상태유지 줄 10 */
+.siteScope .loginInputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.siteScope .loginInputs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+}
+
+.siteScope .loginOption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* 로그인 상태유지: 체크박스·글자 간격 12, B2 Gray-700 */
+.siteScope .loginOption .checkbox {
+    gap: var(--space-12);
+    color: var(--color-gray-700);
+}
+
+/* 아래 영역: padding 0 24 40, SNS ↔ 회원가입 버튼 32 */
+.siteScope .loginBottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-32);
+    padding: 0 var(--space-24) 40px;
+}
+
+/* SNS: 제목 B2 검정, 제목 ↔ 아이콘 16, 아이콘 44 간격 20 */
+.siteScope .loginSns {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-16);
+}
+
+.siteScope .loginSnsTitle {
+    margin: 0;
+    color: var(--color-black);
+    font: var(--text-b2);
+}
+
+.siteScope .loginSnsList {
+    display: flex;
+    gap: var(--space-20);
+}
+
+.siteScope .loginSnsItem {
+    position: relative;
+}
+
+.siteScope .loginSnsButton {
+    display: block;
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+}
+
+.siteScope .loginSnsButton img {
+    display: block;
+    width: 44px;
+    height: 44px;
+}
+
+/* 마지막 로그인 말풍선: Primary-500, radius 8, padding 10 12, C1 흰색, Elevation 2.
+   꼬리 11×7 가운데, 꼬리 끝 ↔ 아이콘 위 8 (Figma 141×43, 아이콘 위 468 - 말풍선 아래 460) */
+.siteScope .loginTooltip {
+    position: absolute;
+    bottom: calc(100% + 15px);
+    left: 50%;
+    z-index: 1;
+    margin: 0;
+    padding: 10px var(--space-12);
+    color: var(--color-white);
+    font: var(--text-c1);
+    white-space: nowrap;
+    background-color: var(--color-primary-500);
+    border-radius: var(--radius-button);
+    box-shadow: var(--shadow-elevation-2);
+    transform: translateX(-50%);
+}
+
+.siteScope .loginTooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    border-top: 7px solid var(--color-primary-500);
+    border-right: 5.5px solid transparent;
+    border-left: 5.5px solid transparent;
+    transform: translateX(-50%);
+}
+
+/* 회원 화면 공통 블록 (ME1.1 ~ ME1.4 등): 아이콘·제목·설명 + 입력 영역 + 맨 아래 버튼 ---------- */
+/* 제목 영역: padding 16 24 32, 간격 8, 아이콘 48, 제목 H2 검정, 설명 B2 Gray-700 */
+.siteScope .pageIntro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding: var(--space-16) var(--space-24) var(--space-32);
+}
+
+/* Top Bar 버튼·제목 없이 빈 56px 영역만 있는 화면 (ME1.3, ME1.4) */
+.siteScope .pageIntro.hasTopSpace {
+    padding-top: calc(var(--top-bar-height) + var(--space-16));
+}
+
+.siteScope .pageIntroIcon {
+    width: 48px;
+    height: 48px;
+}
+
+.siteScope .pageIntroTitle {
+    margin: 0;
+    color: var(--color-black);
+    font: var(--text-h2);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+.siteScope .pageIntroDesc {
+    margin: 0;
+    color: var(--color-gray-700);
+    font: var(--text-b2);
+}
+
+/* 입력 영역: padding 0 24, 요소 간격 16 */
+.siteScope .pageContents {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    padding: 0 var(--space-24);
+}
+
+/* 버튼 + 글자 링크 묶음: 간격 12, 가운데 정렬 (ME1.2) */
+.siteScope .pageActions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-12);
+}
+
+/* 파란 글자 링크 (B2 Primary-500, 밑줄 없음). 예) 로그인 화면으로 이동 */
+.siteScope .pageTextLink {
+    color: var(--color-primary-500);
+    font: var(--text-b2);
+    text-decoration: none;
+}
+
+.siteScope .pageTextLink:focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+/* 화면 높이를 채우고 맨 아래에 버튼을 붙이는 화면 (ME1.4) */
+.siteScope .pageFull {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.siteScope .pageBottom {
+    position: sticky;
+    bottom: 0;
+    margin-top: auto;
+}
+
+/* 제목만 있는 제목 영역 (ME2 회원가입: padding 32 24 24) */
+.siteScope .pageIntro.isTitleOnly {
+    padding: var(--space-32) var(--space-24) var(--space-24);
+}
+
+/* 화면 맨 아래 두 버튼 (Figma Button Type Page Combination: 180 + 180, 간격 0) */
+.siteScope .buttonGroup.isPage {
+    gap: 0;
+}
+
+/* ME2 회원가입 입력 영역: 이메일 묶음 ↔ 비밀번호 묶음 24, 이메일·인증번호 12, 비밀번호·확인 8 */
+.siteScope .signupFields {
+    flex: 1 0 auto;
+    gap: var(--space-24);
+    padding-bottom: var(--space-24);
+}
+
+.siteScope .signupGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+}
+
+.siteScope .signupGroup.isPassword {
+    gap: var(--space-8);
+}
+
+/* 비밀번호 조건 문구: 충족 검정, 미충족 Danger-500 (ME1.3) */
+.siteScope .ruleMet {
+    color: var(--color-black);
+}
+
+.siteScope .ruleUnmet {
+    color: var(--color-danger-500);
+}
+
+/* MY3 홈 (/) ---------------------------------------------------------------- */
+/* 안내 메시지 영역 (+Top): padding 16 0 40, 메시지 ↔ 버튼 16 */
+.siteScope .homeTop {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+    padding: var(--space-16) 0 40px;
+}
+
+/* 메시지 H1(24/32, -0.5) 검정, 강조 글자는 Primary-500 배경 + 흰 글자 */
+.siteScope .homeMessage {
+    margin: 0;
+    padding: 0 var(--space-24);
+    color: var(--color-black);
+    font: var(--text-h1);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+.siteScope .homeMessagePoint {
+    color: var(--color-white);
+    font-style: normal;
+    background-color: var(--color-primary-500);
+}
+
+/* 결과 보러가기 버튼: 화면 왼쪽 끝부터, 글자 영역 padding 8 6 8 32 + 끝 모양(26×40, Figma 원본) */
+.siteScope .homeMessageButton {
+    display: inline-flex;
+    height: 40px;
+    text-decoration: none;
+}
+
+.siteScope .homeMessageButtonText {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: var(--space-8) 6px var(--space-8) var(--space-32);
+    color: var(--color-white);
+    font: var(--text-button-l);
+    background-color: var(--color-primary-500);
+}
+
+.siteScope .homeMessageButtonText img {
+    width: 24px;
+    height: 24px;
+}
+
+.siteScope .homeMessageButtonEdge {
+    flex: none;
+    width: 26px;
+    height: 40px;
+}
+
+.siteScope .homeMessageButton:focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+/* 섹션: padding 32 24 40, 제목 ↔ 내용 16, 제목 H2 */
+.siteScope .homeSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    padding: var(--space-32) var(--space-24) 40px;
+}
+
+.siteScope .homeSectionTitle {
+    margin: 0;
+    color: var(--color-black);
+    font: var(--text-h2);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+/* 신청 대회 목록 ↔ 더 보기 24, 가운데 정렬 */
+.siteScope .homeMyRace {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-24);
+}
+
+/* 카드 목록: 간격 12 */
+.siteScope .homeCardList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* 참여가능 레이스: 좌우 여백 없이 슬라이드(카드 좌우 여백 24는 Slider), 제목 묶음 ↔ 카드 24 */
+.siteScope .homeSection.isOpenRace {
+    gap: var(--space-24);
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.siteScope .homeSectionHead {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding: 0 var(--space-24);
+}
+
+.siteScope .homeSectionDesc {
+    margin: 0;
+    color: var(--color-gray-700);
+    font: var(--text-b2);
+}
+
+/* 참여 가능 대회 없음 (01최소): 마감 대회 카드 위에 흰색 그라데이션 + 전체 리스트 버튼
+   Figma DIM 360×418 (카드 378 + 아래 여백 40), padding 56, 투명 7.38% → 흰색 84.46% */
+.siteScope .homeOpenEmpty {
+    position: relative;
+    margin: 0 var(--space-24);
+}
+
+.siteScope .homeOpenEmptyDim {
+    position: absolute;
+    inset: 0 calc(var(--space-24) * -1) -40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 56px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 7.38%, var(--color-white) 84.46%);
+}
+
+/* RA1 레이스 목록 (/races) -------------------------------------------------- */
+/* 내용 영역: 파란 사선 배경(360×242) 위에 문구(위 12, 왼쪽 24) + 카드 목록(위 100, 간격 24) */
+.siteScope .raceListContents {
+    position: relative;
+    padding: var(--space-12) var(--space-24) 40px;
+}
+
+.siteScope .raceListBg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+}
+
+/* 문구: H2(-0.5) 흰색 2줄 */
+.siteScope .raceListMessage {
+    position: relative;
+    margin: 0;
+    color: var(--color-white);
+    font: var(--text-h2);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+/* 카드 목록: 문구 아래 32 (Figma 목록 위 100 = 12 + 56 + 32), 카드 간격 24 */
+.siteScope .raceListCards {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    margin: var(--space-32) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.siteScope .raceListCards .raceCard.image {
+    width: 100%;
+}
+
+/* 06. Swiper custom styles -------------------------------------------------- */
+
+/* 07. Responsive ------------------------------------------------------------ */
+/* 모바일 우선. 브레이크포인트 768px, 1024px (docs/design.md 6.2) */
+@media (min-width: 768px) {
+    /* 바텀시트 본문 최대 너비 480px 가운데 정렬 (design.md 6.2 제안안) */
+    .siteScope .popup {
+        max-width: 480px;
+    }
+}
