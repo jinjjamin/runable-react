@@ -975,9 +975,8 @@ const [activeTab, setActiveTab] = useState(TABS[0].id);
                         <PropsTable rows={TERMS_FORM_PROPS} />
                     </GuideItem>
 
-                    <GuideItem title="예제" desc="본문 타이틀 + 설명 + 표(3칸) + 글머리 목록 / 본문 타이틀 + 표(1칸) + 번호 목록">
+                    <GuideItem title="예제" desc="본문 타이틀 + 설명 + 표(3칸) + 글머리 목록 / 본문 타이틀 + 표(1칸) + 번호 목록. 실제 화면에서는 위에 Header(type close)를 둡니다 (Guide에서는 #header id 중복을 막기 위해 생략)">
                         <div className="siteScope guideDemo">
-                            <Header title="약관 타이틀" type="close" onButtonClick={handleDemoClick} />
                             <TermsForm sections={TERMS_SAMPLE} />
                         </div>
                         <pre className="guideCode"><code>{`<Header title="개인정보 처리방침" type="close" />

@@ -143,6 +143,7 @@
 | 2026-11-17 | 3-18 대회 목록 | Figma 확인(RA1-대회 목록, 레이스 Card Module 케이스, Description 1~4, CSS(all layers)). 에셋 저장: `iconTime`(파란 시계)·`iconTimeOffWhite`(줄 그은 시계).svg, `images/bgRaceListHeader.svg`(파란 사선 360×242), 대회 사진 `raceHangang.jpg`(624×417)·`raceSheRunsSeoul.jpg`(500×313). `RaceCard` image에 진행예정·신청마감·마감 깃발과 마감 이미지 60% 어둡게, 카드 높이 378 고정(정보 198). `TopBar` `isPrimary`. `pages/pub/race/RaceList`, `data/raceData.ts`. Guide TopBar(isPrimary)·RaceCard(4가지 상태) 갱신. IA Done. 확인: tsc·빌드·린트·CSS 범위 통과, 360 너비 측정값 Figma 일치(Top Bar 파란 배경 56, 사선 배경 360×242, 문구 위 12·왼쪽 24, 첫 카드 위 156(내용 위 100), 카드 378 간격 24, 접수중만 버튼 2개), 홈 01최소 참여가능 영역도 532로 Figma와 일치하게 됨 |
 | 2026-11-20 | 상단 바 이름 변경 | `TopBar` → `Header` (`components/pub/layout/Header/Header.tsx`, Props `HeaderProps`). 사용처 Home·RaceList·Signup·PasswordFind·Guide import·JSX 교체, Layout·TermsForm·common.css 주석 갱신, Guide 메뉴·제목·경로 Header로. CSS 클래스명(`topBar*`)과 Guide 앵커 `#topBar`는 유지. design.md 갱신 |
 | 2026-11-20 | 폴더 평탄화 | 컴포넌트 17개 `components/pub/<묶음>/X/X.tsx` → `<묶음>/X.tsx`, 페이지 9개 `pages/pub/(<메뉴>/)X/X.tsx` → `pages/pub/X.tsx`, 빈 폴더 삭제, 모든 상대 import 경로 재계산. Guide 파일 경로 표시, AGENTS.md(4장 구조·5.1 규칙·IA/Guide 경로), design.md(폴더 구조·설계 원칙·컴포넌트 위치) 갱신. 확인: tsc·빌드·린트 통과, 화면 확인 |
+| 2026-11-20 | 접근성 점검 | 화면 10개·상태 16가지 자동 점검: img alt 누락 0, 이름 없는 버튼·링크 0(아이콘 버튼 aria-label 확인), tabindex>0 없음, 중복 id 없음, 화면마다 h1 1개, lang=ko. 키보드 Tab 이동 시 모든 버튼·링크 :focus-visible 파란 테두리 2px, 입력창은 상자 테두리로 표시 확인. Guide의 TermsForm 예제 Header 제거(#header id 중복 해결). 확인: tsc·빌드·린트·CSS 범위 통과 |
 
 ## 나중에 할 것 (Backlog)
 
